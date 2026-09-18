@@ -47,11 +47,19 @@ class TemplateExplanationProvider(ExplanationProvider):
 
 
 class OpenAICompatibleExplanationProvider(ExplanationProvider):
-    def __init__(self, base_url: str, api_key: str, model: str, timeout: float) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        api_key: str,
+        model: str,
+        timeout: float,
+        reasoning_effort: str | None = None,
+    ) -> None:
         self._base_url = base_url.rstrip("/")
         self._api_key = api_key
         self._model = model
         self._timeout = timeout
+        self._reasoning_effort = reasoning_effort
         self._fallback = TemplateExplanationProvider()
 
     @property
@@ -89,19 +97,23 @@ class OpenAICompatibleExplanationProvider(ExplanationProvider):
         *,
         case: bool,
     ) -> str:
+        payload: dict[str, Any] = {
+            "model": self._model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": 0.1,
+            "max_tokens": 256,
+        }
+        if self._reasoning_effort:
+            payload["reasoning_effort"] = self._reasoning_effort
+
         try:
             response = httpx.post(
                 f"{self._base_url}/chat/completions",
                 headers={"Authorization": f"Bearer {self._api_key}"},
-                json={
-                    "model": self._model,
-                    "messages": [
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_prompt},
-                    ],
-                    "temperature": 0.1,
-                    "max_tokens": 256,
-                },
+                json=payload,
                 timeout=self._timeout,
             )
             response.raise_for_status()
@@ -131,5 +143,6 @@ def get_explanation_provider() -> ExplanationProvider:
             api_key=settings.llm_api_key.get_secret_value(),
             model=settings.llm_model,
             timeout=settings.llm_timeout_seconds,
+            reasoning_effort=settings.llm_reasoning_effort,
         )
     return TemplateExplanationProvider()

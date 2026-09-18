@@ -69,13 +69,16 @@ class HashEmbeddingProvider(EmbeddingProvider):
 class SentenceTransformerProvider(EmbeddingProvider):
     def __init__(self, model_name: str) -> None:
         try:
-            from sentence_transformers import SentenceTransformer  # type: ignore[import-not-found]
+            from sentence_transformers import SentenceTransformer
         except ImportError as exc:
             raise RuntimeError(
                 "sentence-transformers is not installed. Install the 'ml' extra first."
             ) from exc
         self._model: Any = SentenceTransformer(model_name)
-        self._dimension = int(self._model.get_sentence_embedding_dimension())
+        dimension = self._model.get_sentence_embedding_dimension()
+        if dimension is None:
+            raise RuntimeError("SentenceTransformer model did not report an embedding dimension.")
+        self._dimension = int(dimension)
         self._model_name = model_name
 
     @property

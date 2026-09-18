@@ -29,6 +29,7 @@ class SimilarCaseItem(BaseModel):
     similarities: list[str]
     key_differences: list[str]
     anonymized_features: dict[str, Any]
+    explanation: str = ""
 
 
 class SimilarCaseResult(BaseModel):

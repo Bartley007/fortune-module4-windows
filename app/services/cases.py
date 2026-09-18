@@ -9,6 +9,7 @@ from app.core.config import get_settings
 from app.models.entities import CaseProfileRecord, EventRecord
 from app.schemas.case import CaseFeatures, SimilarCaseItem, SimilarCaseResult
 from app.services.embeddings import get_embedding_provider
+from app.services.llm import get_explanation_provider
 from app.services.privacy import get_or_create_privacy
 from app.services.scoring import (
     CASE_ALGORITHM_VERSION,
@@ -88,8 +89,19 @@ def find_similar_cases(
         )
 
     items.sort(key=lambda item: (-item.score, item.case_key))
+    selected_items = items[:top_k]
+    explanation_provider = get_explanation_provider()
+    for item in selected_items:
+        item.explanation = explanation_provider.explain_similar_case(
+            {
+                "score": item.score,
+                "similarities": item.similarities,
+                "key_differences": item.key_differences,
+                "anonymized_features": item.anonymized_features,
+            }
+        )
     return SimilarCaseResult(
-        items=items[:top_k],
+        items=selected_items,
         threshold=effective_threshold,
         algorithm_version=CASE_ALGORITHM_VERSION,
     )

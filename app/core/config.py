@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     llm_base_url: str | None = None
     llm_api_key: SecretStr | None = None
     llm_timeout_seconds: float = Field(default=30.0, gt=0)
+    llm_reasoning_effort: str | None = None
 
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
 

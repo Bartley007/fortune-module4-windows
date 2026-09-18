@@ -136,6 +136,7 @@ LLM_PROVIDER=openai_compatible
 LLM_MODEL=qwen3:8b
 LLM_BASE_URL=http://127.0.0.1:11434/v1
 LLM_API_KEY=ollama
+LLM_REASONING_EFFORT=none
 ```
 
 The exact model tag depends on the model installed in Ollama or LM Studio. Module 4 only requires an

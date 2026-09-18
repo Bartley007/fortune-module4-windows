@@ -61,6 +61,7 @@ def test_similar_cases_use_only_consented_anonymized_profiles(client: TestClient
     assert len(items) == 1
     assert "user_id" not in items[0]
     assert items[0]["score"] == 1.0
+    assert "chart structure similarity" in items[0]["explanation"]
 
 
 def test_similar_cases_exclude_profiles_without_consent(client: TestClient) -> None:
