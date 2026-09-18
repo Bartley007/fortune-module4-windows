@@ -1,0 +1,35 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: fortune_module4
+      POSTGRES_USER: fortune
+      POSTGRES_PASSWORD: fortune
+    ports:
+      - "5432:5432"
+    volumes:
+      - module4_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fortune -d fortune_module4"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      APP_NAME: fortune-module4
+      ENVIRONMENT: docker
+      DEBUG: "false"
+      DATABASE_URL: postgresql+psycopg://fortune:fortune@db:5432/fortune_module4
+      AUTO_CREATE_TABLES: "false"
+      EMBEDDING_PROVIDER: hash
+      LLM_PROVIDER: template
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  module4_pgdata:
