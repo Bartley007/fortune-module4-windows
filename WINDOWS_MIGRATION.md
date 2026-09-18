@@ -17,7 +17,8 @@ Do not copy `.venv` from macOS. Windows must create its own virtual environment.
 
 ## 2. Quick Start With SQLite
 
-Extract the package, open PowerShell or Command Prompt in the project directory, then run:
+Extract the package, open PowerShell or Command Prompt in the `fortune_module4` subfolder, then
+run:
 
 ```bat
 setup_windows.bat
