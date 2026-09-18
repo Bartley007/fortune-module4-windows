@@ -36,6 +36,19 @@ The default local settings use SQLite at `./module4.db`, automatically create ta
 The local development dependency uses `X-User-Id`. When the header is absent, `DEV_USER_ID` is used.
 Set `REQUIRE_USER_HEADER=true` to require the header explicitly.
 
+## Quick Start On Windows
+
+Install 64-bit Python 3.12, then run:
+
+```bat
+setup_windows.bat
+test_windows.bat
+start_windows.bat
+```
+
+The Windows defaults use SQLite, hash embeddings, and template explanations. See
+`WINDOWS_MIGRATION.md` for PostgreSQL, NVIDIA CUDA, WSL2, vLLM, Ollama, and Git restore steps.
+
 ## PostgreSQL + pgvector
 
 Copy `.env.example` to `.env`, start PostgreSQL through Docker Compose, and run the migration:
