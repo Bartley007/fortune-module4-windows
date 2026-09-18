@@ -69,7 +69,9 @@ class HashEmbeddingProvider(EmbeddingProvider):
 class SentenceTransformerProvider(EmbeddingProvider):
     def __init__(self, model_name: str) -> None:
         try:
-            from sentence_transformers import SentenceTransformer
+            from sentence_transformers import (  # type: ignore[import-not-found,unused-ignore]
+                SentenceTransformer,
+            )
         except ImportError as exc:
             raise RuntimeError(
                 "sentence-transformers is not installed. Install the 'ml' extra first."
