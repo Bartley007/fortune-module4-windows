@@ -48,6 +48,7 @@ start_windows.bat
 
 The Windows defaults use SQLite, hash embeddings, and template explanations. See
 `WINDOWS_MIGRATION.md` for PostgreSQL, NVIDIA CUDA, WSL2, vLLM, Ollama, and Git restore steps.
+The completed Windows WSL2, Docker, pgvector, CUDA container, BGE-M3, and Ollama verification is recorded in `WINDOWS_VERIFICATION.md`.
 
 ## PostgreSQL + pgvector
 
