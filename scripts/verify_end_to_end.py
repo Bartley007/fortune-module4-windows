@@ -44,6 +44,53 @@ def main() -> None:
         require(privacy.json()["result"]["allow_anonymous_cases"] is True, "privacy update failed")
         print("[OK] privacy")
 
+        compat_session_id = f"compat-{uuid4().hex[:12]}"
+        compat_event_id = str(uuid4())
+        compat_event = {
+            "session_id": compat_session_id,
+            "event_id": compat_event_id,
+            "event_type": "question",
+            "module": "bazi",
+            "user_id": user_id,
+            "payload": {
+                "question": "E2E compatibility event",
+                "source_ref": "source:e2e-compat",
+            },
+        }
+        first_compat_event = client.post("/api/session/event", json=compat_event)
+        first_compat_event.raise_for_status()
+        require(first_compat_event.json()["meta"]["mock"] is False, "compat event envelope failed")
+        duplicate_compat_event = client.post("/api/session/event", json=compat_event)
+        duplicate_compat_event.raise_for_status()
+        require(
+            duplicate_compat_event.json()["result"]["duplicate"] is True,
+            "compat event idempotency failed",
+        )
+
+        compat_note = client.post(
+            "/api/user/notes",
+            json={
+                "user_id": user_id,
+                "title": "E2E compatibility note",
+                "content": "Created through the frontend compatibility route.",
+                "tags": ["compat"],
+                "source_ref": "source:e2e-compat",
+                "action": "create",
+            },
+        )
+        compat_note.raise_for_status()
+        compat_note_id = compat_note.json()["result"]["note_id"]
+        deleted_compat_note = client.post(
+            "/api/user/notes",
+            json={"user_id": user_id, "note_id": compat_note_id, "action": "delete"},
+        )
+        deleted_compat_note.raise_for_status()
+        require(
+            deleted_compat_note.json()["result"]["deleted"] is True,
+            "compat note deletion failed",
+        )
+        print("[OK] frontend compatibility routes")
+
         created_session = client.post(
             "/api/v1/sessions",
             headers=headers,
