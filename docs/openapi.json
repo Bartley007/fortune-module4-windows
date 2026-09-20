@@ -3,7 +3,7 @@
   "info": {
     "title": "Fortune Module 4 API",
     "description": "Personalization, session history, recommendation, similar cases, and personal knowledge base backend for the fortune-telling project.",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "paths": {
     "/api/v1/sessions": {
@@ -1060,6 +1060,140 @@
         }
       }
     },
+    "/api/session/event": {
+      "post": {
+        "tags": [
+          "compatibility"
+        ],
+        "summary": "Compatibility Ingest Event",
+        "operationId": "compatibility_ingest_event_api_session_event_post",
+        "parameters": [
+          {
+            "name": "X-User-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "X-Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpstreamSessionEventRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompatEnvelope_CompatEventData_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/notes": {
+      "post": {
+        "tags": [
+          "compatibility"
+        ],
+        "summary": "Compatibility Save Note",
+        "operationId": "compatibility_save_note_api_user_notes_post",
+        "parameters": [
+          {
+            "name": "X-User-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpstreamNoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompatEnvelope_Union_CompatNoteData__CompatDeleteData__"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -1240,6 +1374,324 @@
           "created_at"
         ],
         "title": "CollectionOut"
+      },
+      "CompatDeleteData": {
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted"
+          },
+          "note_id": {
+            "type": "string",
+            "title": "Note Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "deleted",
+          "note_id"
+        ],
+        "title": "CompatDeleteData"
+      },
+      "CompatEnvelope_CompatEventData_": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompatEventData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "system": {
+            "type": "string",
+            "title": "System"
+          },
+          "source_refs": {
+            "items": {
+              "$ref": "#/components/schemas/CompatSourceRef"
+            },
+            "type": "array",
+            "title": "Source Refs"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/CompatMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "system"
+        ],
+        "title": "CompatEnvelope[CompatEventData]"
+      },
+      "CompatEnvelope_Union_CompatNoteData__CompatDeleteData__": {
+        "properties": {
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CompatNoteData"
+              },
+              {
+                "$ref": "#/components/schemas/CompatDeleteData"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "system": {
+            "type": "string",
+            "title": "System"
+          },
+          "source_refs": {
+            "items": {
+              "$ref": "#/components/schemas/CompatSourceRef"
+            },
+            "type": "array",
+            "title": "Source Refs"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDetail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "meta": {
+            "$ref": "#/components/schemas/CompatMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "system"
+        ],
+        "title": "CompatEnvelope[Union[CompatNoteData, CompatDeleteData]]"
+      },
+      "CompatEventData": {
+        "properties": {
+          "accepted": {
+            "type": "boolean",
+            "title": "Accepted"
+          },
+          "event_count": {
+            "type": "integer",
+            "title": "Event Count"
+          },
+          "event_id": {
+            "type": "string",
+            "title": "Event Id"
+          },
+          "duplicate": {
+            "type": "boolean",
+            "title": "Duplicate"
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "accepted",
+          "event_count",
+          "event_id",
+          "duplicate",
+          "idempotency_key"
+        ],
+        "title": "CompatEventData"
+      },
+      "CompatMeta": {
+        "properties": {
+          "mock": {
+            "type": "boolean",
+            "title": "Mock",
+            "default": false
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          }
+        },
+        "type": "object",
+        "title": "CompatMeta"
+      },
+      "CompatNoteData": {
+        "properties": {
+          "note_id": {
+            "type": "string",
+            "title": "Note Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "note_id",
+          "title",
+          "content",
+          "tags",
+          "source_ref",
+          "updated_at"
+        ],
+        "title": "CompatNoteData"
+      },
+      "CompatSourceRef": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "edition": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edition"
+          },
+          "chapter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chapter"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "title"
+        ],
+        "title": "CompatSourceRef"
       },
       "DeleteDataResult": {
         "properties": {
@@ -3395,6 +3847,11 @@
             "additionalProperties": true,
             "type": "object",
             "title": "Anonymized Features"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation",
+            "default": ""
           }
         },
         "type": "object",
@@ -3519,6 +3976,230 @@
           "created_at"
         ],
         "title": "TagOut"
+      },
+      "UpstreamNoteRequest": {
+        "properties": {
+          "note_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 36
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 255,
+            "title": "Title",
+            "default": ""
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 100000,
+            "title": "Content",
+            "default": ""
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Tags"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref"
+          },
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id"
+          },
+          "collection_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 36
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collection Id"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Refs"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update",
+              "delete"
+            ],
+            "title": "Action",
+            "default": "create"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "UpstreamNoteRequest"
+      },
+      "UpstreamSessionEventRequest": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "maxLength": 36,
+            "minLength": 1,
+            "title": "Session Id"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Event Type"
+          },
+          "module": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Module"
+          },
+          "payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Payload"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "event_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 36
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Event Id"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Id"
+          },
+          "source_module": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Module"
+          },
+          "sequence_no": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequence No"
+          },
+          "system": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "System"
+          },
+          "source_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Source Refs"
+          },
+          "schema_version": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Schema Version",
+            "default": "1.0"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "session_id",
+          "event_type",
+          "module"
+        ],
+        "title": "UpstreamSessionEventRequest"
       },
       "ValidationError": {
         "properties": {

@@ -43,6 +43,16 @@ Module 4 是面向传统术数项目的个性化与私人知识库后端。它�
 - LLM 仅生成推荐解释和相似案例解释。
 - LLM 不允许修改图表、卦象、签号、原文、确定性命中数据、分数或排序结果。
 
+## 跨平台部署
+
+- Windows 原生：`setup_windows.bat`、`test_windows.bat`、`start_windows.bat`。
+- Linux 原生：`setup_linux.sh`、`test_linux.sh`、`start_linux.sh`。
+- Linux CUDA/ML：`setup_linux_gpu.sh`。
+- macOS 远程 Qwen：`scripts/setup_mac_qwen.sh`。
+- Windows 到 Mac 隧道：`start_remote_mac_qwen_windows.bat`。
+- Linux/macOS 到 Mac 隧道：`start_remote_mac_qwen_tunnel.sh`。
+- 模式说明：`docs/deployment_modes.md`。
+- 版本升级到 `0.2.0`，详细变更见 `CHANGELOG.md`。
 ## 存储与运行
 
 - 默认本地 SQLite，可无 GPU 启动。

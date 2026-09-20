@@ -1,4 +1,4 @@
-Fortune Module 4 - Windows Migration Package
+Fortune Module 4 - Cross-Platform Package
 
 1. Extract this entire folder.
 2. Install 64-bit Python 3.12.
@@ -11,6 +11,7 @@ Fortune Module 4 - Windows Migration Package
 The default setup uses SQLite, hash embeddings, and template explanations. It does not require a GPU.
 
 Read WINDOWS_MIGRATION.md for PostgreSQL, NVIDIA GPU, WSL2, vLLM, Ollama, and Git restore steps.
-Read PROMPT_SUMMARY.md for the current state and the prompt to use on the Windows computer.
+Read docs/deployment_modes.md for Linux and remote Mac Qwen modes.
+Read PROMPT_SUMMARY.md for the current state and handoff prompt.
 
 The Git history is stored in fortune_module4_git.bundle.

@@ -50,6 +50,48 @@ The Windows defaults use SQLite, hash embeddings, and template explanations. See
 `WINDOWS_MIGRATION.md` for PostgreSQL, NVIDIA CUDA, WSL2, vLLM, Ollama, and Git restore steps.
 The completed Windows WSL2, Docker, pgvector, CUDA container, BGE-M3, and Ollama verification is recorded in `WINDOWS_VERIFICATION.md`.
 
+## Quick Start On Linux
+
+Install Python 3.12, then run:
+
+```bash
+bash setup_linux.sh
+bash test_linux.sh
+bash start_linux.sh
+```
+
+Linux defaults use SQLite, hash embeddings, and template explanations. Optional CUDA/ML support:
+
+```bash
+bash setup_linux_gpu.sh
+```
+
+See `docs/deployment_modes.md` for Windows, Linux, and remote Mac deployment details.
+
+## Remote Mac Qwen
+
+On the MacBook:
+
+```bash
+bash scripts/setup_mac_qwen.sh
+```
+
+On Windows:
+
+```bat
+start_remote_mac_qwen_windows.bat -SshTarget user@macbook-host
+```
+
+On Linux or macOS:
+
+```bash
+export MAC_QWEN_SSH_TARGET=user@macbook-host
+bash start_remote_mac_qwen_tunnel.sh --background
+```
+
+Then copy `remote_mac_qwen.env.example` to `.env`. Ollama remains bound to the Mac localhost and is
+reached through an SSH tunnel.
+
 ## PostgreSQL + pgvector
 
 Copy `.env.example` to `.env`, start PostgreSQL through Docker Compose, and run the migration:

@@ -22,7 +22,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 app = FastAPI(
     title="Fortune Module 4 API",
-    version="0.1.0",
+    version="0.2.0",
     description=(
         "Personalization, session history, recommendation, similar cases, and personal "
         "knowledge base backend for the fortune-telling project."
