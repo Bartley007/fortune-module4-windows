@@ -14,7 +14,7 @@ Verified on 2026-09-21.
 
 ## Windows Native
 
-- `test_windows.bat`: Ruff, mypy, and 15 pytest tests passed.
+- `test_windows.bat`: Ruff, mypy, and 24 pytest tests passed.
 - Native API started on port 8020 with SQLite, hash embeddings, and template explanations.
 - `/health`, `/docs`, and `/openapi.json` returned HTTP 200.
 - OpenAPI version: `0.2.0`.
@@ -25,7 +25,7 @@ Verified in the official `python:3.12-slim` container with Windows virtual envir
 and databases excluded:
 
 - `setup_linux.sh` installed dependencies and created `.env` from `linux.env.example`.
-- `test_linux.sh` passed Ruff, mypy, and 15 pytest tests.
+- `test_linux.sh` passed Ruff, mypy, and 24 pytest tests.
 - `start_linux.sh` started Uvicorn successfully.
 - `/health` returned `{"status":"ok","service":"fortune-module4"}`.
 

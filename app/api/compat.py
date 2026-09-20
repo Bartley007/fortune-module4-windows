@@ -21,6 +21,7 @@ from app.schemas.event import EventIngestRequest
 from app.schemas.personal import NoteCreate
 from app.services.events import ingest_event, list_session_events
 from app.services.personal import delete_note, note_to_schema, upsert_note
+from app.services.source_ids import stable_source_id_from_url
 
 router = APIRouter(tags=["compatibility"])
 
@@ -96,16 +97,25 @@ def _normalize_event_type(event_type: str) -> str:
     return f"frontend.{normalized}"
 
 
+def _canonical_source_ref(value: str) -> str:
+    normalized = value.strip()
+    if normalized.startswith(("http://", "https://")):
+        return stable_source_id_from_url(normalized)
+    return normalized
+
+
 def _collect_source_refs(explicit: list[str], payload: dict[str, Any]) -> list[str]:
-    values = [value.strip() for value in explicit if value and value.strip()]
+    values = [_canonical_source_ref(value) for value in explicit if value and value.strip()]
     for key in ("source_refs", "source_ids"):
         raw = payload.get(key)
         if isinstance(raw, list):
-            values.extend(str(value).strip() for value in raw if str(value).strip())
+            values.extend(
+                _canonical_source_ref(str(value)) for value in raw if str(value).strip()
+            )
     for key in ("source_ref", "source_id"):
         raw = payload.get(key)
         if isinstance(raw, str) and raw.strip():
-            values.append(raw.strip())
+            values.append(_canonical_source_ref(raw))
     return list(dict.fromkeys(values))
 
 
@@ -194,7 +204,8 @@ def compatibility_save_note(
                 status_code=422,
             )
 
-        source_id = (payload.source_id or payload.source_ref or "").strip() or None
+        source_value = (payload.source_id or payload.source_ref or "").strip()
+        source_id = _canonical_source_ref(source_value) if source_value else None
         note_refs = list(
             dict.fromkeys(
                 [

@@ -25,7 +25,7 @@ Verified on 2026-09-21 on Windows 11 build `10.0.26200` with a remote MacBook M5
 
 ## Verified Application Behavior
 
-Ruff, mypy, and all 15 pytest tests pass with:
+Ruff, mypy, and all 24 pytest tests pass with:
 
 - Development-only install: `pip install -e ".[dev]"`.
 - ML install: `setup_windows_gpu.bat`.
@@ -62,6 +62,10 @@ Module 4 provides the two routes currently used by the `Slyvia0425/fortune` fron
 Both return the frontend envelope shape, including `meta` and source-reference objects. Native
 Module 4 `/api/v1` endpoints remain unchanged. Tests cover event mapping, event idempotency, note
 create/update/delete, validation envelopes, and user mismatch rejection.
+
+## Knowledge Dataset Validation
+
+The upstream 764-record dataset has complete required fields, valid source types and categories, no duplicate URLs, and 764 unique derived source IDs. The upstream file still lacks `source_id` and `content_checksum`; Module 4 reports that strict contract gap and can generate deterministic source IDs without modifying the dataset.
 
 ## Docker Runtime Recovery
 

@@ -10,6 +10,7 @@
 - Added macOS CI and shell syntax validation.
 - Added cross-platform deployment documentation.
 - Added live end-to-end verification covering frontend compatibility routes, PostgreSQL, and remote Qwen.
+- Added knowledge dataset contract validation and deterministic source-id mapping.
 
 ## 0.1.0
 

@@ -162,3 +162,33 @@ def test_compatibility_validation_error_uses_frontend_envelope(
     assert body["result"] is None
     assert body["error"]["code"] == "VALIDATION_ERROR"
     assert body["meta"]["mock"] is False
+
+def test_compatibility_routes_canonicalize_url_source_refs(
+    client: TestClient,
+) -> None:
+    event = client.post(
+        "/api/session/event",
+        json={
+            "session_id": "compat-url-source-001",
+            "event_type": "knowledge_read",
+            "module": "knowledge",
+            "user_id": "compat-url-source-user",
+            "payload": {"source_ref": "https://example.com/source/#section"},
+        },
+    )
+    event.raise_for_status()
+    source_id = event.json()["source_refs"][0]["source_id"]
+    assert source_id.startswith("source:")
+
+    note = client.post(
+        "/api/user/notes",
+        json={
+            "user_id": "compat-url-source-user",
+            "title": "URL source",
+            "content": "Stable source mapping",
+            "source_ref": "https://example.com/source/#section",
+            "action": "create",
+        },
+    )
+    note.raise_for_status()
+    assert note.json()["result"]["source_ref"] == source_id
