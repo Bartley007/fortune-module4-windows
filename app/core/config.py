@@ -28,11 +28,11 @@ class Settings(BaseSettings):
     embedding_dim: int = Field(default=1024, ge=1)
 
     llm_provider: str = "template"
-    llm_model: str = "Qwen3-8B-Instruct"
+    llm_model: str = "qwen3.8:27b"
     llm_base_url: str | None = None
     llm_api_key: SecretStr | None = None
-    llm_timeout_seconds: float = Field(default=30.0, gt=0)
-    llm_reasoning_effort: str | None = None
+    llm_timeout_seconds: float = Field(default=600.0, gt=0)
+    llm_reasoning_effort: str | None = "none"
 
     cors_origins: str = "http://localhost:3000,http://localhost:5173"
 

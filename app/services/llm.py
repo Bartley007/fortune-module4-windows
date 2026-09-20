@@ -84,7 +84,7 @@ class OpenAICompatibleExplanationProvider(ExplanationProvider):
             "Do not infer identity or make deterministic fate claims."
         )
         user_prompt = (
-            "State at least two similarities and one key difference. Context: "
+            "请使用简体中文，至少说明两个相似点和至少一个关键差异，不要推断身份或命运。Context: "
             f"{json.dumps(context, ensure_ascii=False)}"
         )
         return self._complete(system_prompt, user_prompt, context, case=True)

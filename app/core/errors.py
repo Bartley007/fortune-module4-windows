@@ -53,6 +53,28 @@ def _json_safe(value: Any) -> Any:
     return str(value)
 
 
+
+COMPAT_SYSTEMS = {
+    "/api/session/event": "session-event-v1",
+    "/api/user/notes": "user-notes-v1",
+}
+
+
+def _compat_error_payload(
+    system: str,
+    code: str,
+    message: str,
+    details: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    from app.schemas.compat import compat_failure
+
+    return compat_failure(
+        system=system,
+        code=code,
+        message=message,
+        details=details,
+    ).model_dump(mode="json")
+
 def sanitize_validation_errors(errors: Sequence[Any]) -> list[dict[str, Any]]:
     return [
         {
@@ -66,26 +88,43 @@ def sanitize_validation_errors(errors: Sequence[Any]) -> list[dict[str, Any]]:
 
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(AppError)
-    async def handle_app_error(_: Request, exc: AppError) -> JSONResponse:
-        return JSONResponse(
-            status_code=exc.status_code,
-            content=error_payload(exc.code, exc.message, exc.details),
+    async def handle_app_error(request: Request, exc: AppError) -> JSONResponse:
+        compat_system = COMPAT_SYSTEMS.get(request.url.path)
+        content = (
+            _compat_error_payload(compat_system, exc.code, exc.message, exc.details)
+            if compat_system
+            else error_payload(exc.code, exc.message, exc.details)
         )
+        return JSONResponse(status_code=exc.status_code, content=content)
 
     @app.exception_handler(RequestValidationError)
-    async def handle_validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
+    async def handle_validation_error(
+        request: Request,
+        exc: RequestValidationError,
+    ) -> JSONResponse:
+        details = {"errors": sanitize_validation_errors(exc.errors())}
+        compat_system = COMPAT_SYSTEMS.get(request.url.path)
+        if compat_system:
+            return JSONResponse(
+                status_code=400,
+                content=_compat_error_payload(
+                    compat_system,
+                    "VALIDATION_ERROR",
+                    "Request validation failed",
+                    details,
+                ),
+            )
         return JSONResponse(
             status_code=422,
-            content=error_payload(
-                "VALIDATION_ERROR",
-                "Request validation failed",
-                {"errors": sanitize_validation_errors(exc.errors())},
-            ),
+            content=error_payload("VALIDATION_ERROR", "Request validation failed", details),
         )
 
     @app.exception_handler(StarletteHTTPException)
-    async def handle_http_error(_: Request, exc: StarletteHTTPException) -> JSONResponse:
-        return JSONResponse(
-            status_code=exc.status_code,
-            content=error_payload("HTTP_ERROR", str(exc.detail)),
+    async def handle_http_error(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+        compat_system = COMPAT_SYSTEMS.get(request.url.path)
+        content = (
+            _compat_error_payload(compat_system, "HTTP_ERROR", str(exc.detail))
+            if compat_system
+            else error_payload("HTTP_ERROR", str(exc.detail))
         )
+        return JSONResponse(status_code=exc.status_code, content=content)

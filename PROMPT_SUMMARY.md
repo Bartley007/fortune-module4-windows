@@ -68,12 +68,12 @@ Embedding options:
 
 Explanation model:
 
-- `Qwen3-8B-Instruct` or an equivalent Chinese instruction model through an OpenAI-compatible API.
+- `Qwen3.8-27B` or an equivalent Chinese instruction model through an OpenAI-compatible API.
 
 Recommended deployment:
 
 - Windows-native CUDA PyTorch for BGE embeddings.
-- WSL2 + vLLM or Docker Desktop + vLLM for Qwen3-8B.
+- WSL2 + vLLM or Docker Desktop + vLLM for Qwen3.8-27B.
 - Ollama or LM Studio as simpler native Windows alternatives.
 
 The LLM is never allowed to calculate or modify deterministic facts or ranking.
@@ -108,7 +108,7 @@ After the baseline checks pass, migrate the runtime in this order:
 1. Enable SQLite quick start on Windows and verify all tests.
 2. Enable PostgreSQL + pgvector through Docker Desktop or WSL2 and run Alembic.
 3. Install a CUDA-compatible PyTorch wheel and run BGE-M3 or bge-small-zh-v1.5 on the NVIDIA GPU.
-4. Start Qwen3-8B through WSL2/vLLM, Docker/vLLM, Ollama, or LM Studio.
+4. Start Qwen3.8-27B through WSL2/vLLM, Docker/vLLM, Ollama, or LM Studio.
 5. Set LLM_PROVIDER=openai_compatible and verify recommendation and similar-case explanations.
 6. Add explicit embedding device and dtype settings if the machine has multiple GPUs.
 

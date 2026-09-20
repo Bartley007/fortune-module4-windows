@@ -23,7 +23,7 @@ def test_openai_compatible_provider_sends_reasoning_effort(monkeypatch: Any) -> 
     provider = OpenAICompatibleExplanationProvider(
         base_url="http://127.0.0.1:11434/v1",
         api_key="ollama",
-        model="qwen3:8b",
+        model="qwen3.8:27b",
         timeout=30,
         reasoning_effort="none",
     )

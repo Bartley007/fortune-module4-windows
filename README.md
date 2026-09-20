@@ -86,6 +86,19 @@ PUT    /api/v1/me/privacy
 
 `POST /api/session/event` is retained as a compatibility alias for the cross-module event contract.
 
+## Upstream Compatibility API
+
+The `Slyvia0425/fortune` frontend currently sends a smaller event and note payload. Module 4 exposes
+compatibility routes without changing the native `/api/v1` contracts:
+
+| Method | Route | Native behavior |
+| --- | --- | --- |
+| POST | `/api/session/event` | Maps the frontend event shape into persistent event ingestion |
+| POST | `/api/user/notes` | Maps create, update, and delete actions into private notes |
+
+These routes return the frontend `ApiEnvelope` shape, including `meta` and source reference objects.
+The native Module 4 envelopes and endpoints remain unchanged.
+
 ## Response Envelope
 
 Every business endpoint returns:
@@ -119,7 +132,7 @@ which keeps tests and integration demos fast. Production options:
 - Embeddings: BGE-M3 or `bge-small-zh-v1.5` through `sentence-transformers`.
 - Vector storage: PostgreSQL + pgvector.
 - Ranking: weighted deterministic rules in this repository.
-- Explanation: `template` or an OpenAI-compatible Qwen3-8B-Instruct endpoint.
+- Explanation: `template` or an OpenAI-compatible Qwen3.8-27B endpoint.
 
 The LLM receives only ranked candidates, scores, and `source_refs`. It does not participate in
 fact calculation, case matching, or ranking.

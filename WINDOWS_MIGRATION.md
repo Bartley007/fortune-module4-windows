@@ -86,7 +86,7 @@ The migration enables the `vector` extension before creating the embedding colum
 Two independent workloads can use CUDA:
 
 1. BGE embeddings through `sentence-transformers`.
-2. Qwen3-8B explanation generation through an OpenAI-compatible server.
+2. Qwen3.8-27B explanation generation through an OpenAI-compatible server.
 
 ### 5.1 CUDA PyTorch and BGE
 
@@ -114,7 +114,7 @@ EMBEDDING_DIM=1024
 The first request downloads the model. `sentence-transformers` uses CUDA automatically when the
 installed PyTorch build can see the NVIDIA GPU.
 
-### 5.2 Qwen3-8B on Windows
+### 5.2 Qwen3.8-27B on Windows
 
 Windows-native vLLM support is limited. Prefer one of these routes:
 
@@ -126,21 +126,23 @@ Example with Ollama after pulling a Qwen3 8B model:
 
 ```bat
 ollama serve
-ollama pull qwen3:8b
+ollama pull qwen3.8:27b
 ```
 
 Set:
 
 ```dotenv
 LLM_PROVIDER=openai_compatible
-LLM_MODEL=qwen3:8b
+LLM_MODEL=qwen3.8:27b
 LLM_BASE_URL=http://127.0.0.1:11434/v1
 LLM_API_KEY=ollama
+LLM_TIMEOUT_SECONDS=600
 LLM_REASONING_EFFORT=none
 ```
 
 The exact model tag depends on the model installed in Ollama or LM Studio. Module 4 only requires an
-OpenAI-compatible `/v1/chat/completions` endpoint.
+OpenAI-compatible `/v1/chat/completions` endpoint. On an 8 GB GPU, Ollama will split Qwen3.8-27B
+between CPU and GPU; expect slower generation and keep the context small.
 
 ## 6. Git Bundle
 

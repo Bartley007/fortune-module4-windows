@@ -7,7 +7,7 @@
 - Session recall: Markov transitions and session co-occurrence.
 - Re-ranking: the weighted deterministic formula in `app/services/scoring.py`.
 - Similar cases: pgvector plus structured multi-feature similarity.
-- Explanation: Qwen3-8B-Instruct or an equivalent Chinese Instruct API.
+- Explanation: Qwen3.8-27B or an equivalent Chinese Instruct API through a local or OpenAI-compatible endpoint.
 
 ## Ranking Formula
 
