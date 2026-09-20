@@ -153,6 +153,12 @@ Or directly:
 .venv/bin/pytest
 ```
 
+For a live PostgreSQL and configured LLM verification:
+
+```bat
+verify_end_to_end_windows.bat
+```
+
 ## Demo Data
 
 ```bash
