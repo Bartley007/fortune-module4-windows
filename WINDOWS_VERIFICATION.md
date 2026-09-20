@@ -44,6 +44,14 @@ Both return the frontend envelope shape, including `meta` and source-reference o
 Module 4 `/api/v1` endpoints remain unchanged. Integration tests verify event mapping, event
 idempotency, note create/update/delete, response headers, and user mismatch rejection.
 
+## Docker Runtime Recovery
+
+After the Windows restart, Docker Desktop 4.91.0 hit the known Windows 11 build 26200 AF_UNIX
+reparse-point issue: stale `sailor-ingest.sock` entries under `%LOCALAPPDATA%\Docker\run` and
+`%LOCALAPPDATA%\docker-secrets-engine` could not be renamed. Docker was stopped and those two
+runtime directories were renamed aside; the Docker VHDX, images, containers, and PostgreSQL volume
+were not reset. Docker Desktop then started normally and the existing pgvector container was reused.
+
 ## GPU Memory Note
 
 The RTX 5070 Laptop GPU has 8 GB of memory. Qwen3.8-27B Q4_K_M is about 18 GB at runtime and cannot
