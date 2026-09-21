@@ -19,7 +19,8 @@ import {
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
-import { Module4ApiError, getApiBaseUrl, module4Api } from "@/lib/api";
+import KnowledgeAgent from "@/components/knowledge-agent";
+import { Module4ApiError, module4Api } from "@/lib/api";
 import type {
   CollectionDraft,
   CollectionItem,
@@ -179,7 +180,6 @@ export default function LibraryWorkspace() {
   }, [activeTab, notes, query]);
 
   const hasVisibleItems = filteredCollections.length + filteredNotes.length > 0;
-  const apiBaseUrl = getApiBaseUrl();
 
   async function refreshPersonalData(successMessage: string) {
     setBusy(true);
@@ -352,24 +352,25 @@ export default function LibraryWorkspace() {
   return (
     <main className="subpage">
       <section className="page-hero">
-        <div className="page-shell page-hero-grid">
-          <div>
-            <p className="crumb">
-              <a href="/">首页</a> ／ 个人知识库
-            </p>
-            <p className="kicker">PERSONAL KNOWLEDGE BASE</p>
-            <h1 className="page-title">所读有记，所思有归</h1>
-            <p>收藏典籍段落、卦象、签文与个人笔记，并保留来源链接、上下文和更新时间。</p>
-          </div>
-          <div className="identity-panel">
-            <span className={`status-dot ${error ? "offline" : ""}`} />
-            <div>
-              <strong>{error ? "API 未连接" : "Module 4 API"}</strong>
-              <small>{apiBaseUrl}</small>
-            </div>
-          </div>
+        <div className="page-shell">
+          <p className="crumb">
+            <a href="/">首页</a> ／ 个人知识库
+          </p>
+          <p className="kicker">PERSONAL KNOWLEDGE BASE</p>
+          <h1 className="page-title">与你的知识库对话</h1>
+          <p>收藏典籍段落、卦象、签文与个人笔记，再通过知识库智能体检索原文、上下文和来源。</p>
         </div>
       </section>
+
+      <KnowledgeAgent
+        collections={collections}
+        loading={loading}
+        notes={notes}
+        onAddCollection={() => setShowCollectionForm(true)}
+        onAddNote={() => setShowNoteForm(true)}
+        tags={tagItems}
+        userId={activeUser}
+      />
 
       <section className="page-shell library-shell" id="collections">
         <div className="library-main">

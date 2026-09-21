@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 const navigation = [
-  { href: "#collections", label: "藏书" },
-  { href: "#notes", label: "笔记" },
+  { href: "#agent", label: "知识助手" },
+  { href: "#collections", label: "我的藏书" },
+  { href: "#notes", label: "知识笔记" },
   { href: "#tags", label: "标签" },
-  { href: "#privacy", label: "隐私" },
+  { href: "#privacy", label: "数据隐私" },
 ];
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -39,7 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               ))}
             </nav>
             <Link className="library-link" href="/">
-              我的藏书 <span>M4</span>
+              个人知识库
             </Link>
           </div>
         </header>

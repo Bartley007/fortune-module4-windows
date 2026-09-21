@@ -1,7 +1,9 @@
 # Fortune Module 4 Frontend
 
 Next.js frontend for the personal knowledge base and privacy surfaces of Module 4. The visual
-system follows `Slyvia0425/fortune`; the data calls target this repository's FastAPI service.
+system follows `Slyvia0425/fortune`; the data calls target this repository's FastAPI service. The
+main workspace includes a retrieval agent that answers from the current user's collections, notes,
+and tags while preserving the matching `source_id` references.
 
 ## Local development
 
