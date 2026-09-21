@@ -34,7 +34,10 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = Field(default=600.0, gt=0)
     llm_reasoning_effort: str | None = "none"
 
-    cors_origins: str = "http://localhost:3000,http://localhost:5173"
+    cors_origins: str = (
+        "http://localhost:3000,http://127.0.0.1:3000,"
+        "http://localhost:5173,http://127.0.0.1:5173"
+    )
 
     recommendation_weights_json: str | None = None
     case_similarity_threshold: float = Field(default=0.60, ge=0, le=1)

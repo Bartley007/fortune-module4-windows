@@ -92,6 +92,36 @@ bash start_remote_mac_qwen_tunnel.sh --background
 Then copy `remote_mac_qwen.env.example` to `.env`. Ollama remains bound to the Mac localhost and is
 reached through an SSH tunnel.
 
+## Module 4 Frontend
+
+The optional `frontend/` application follows the shared `Slyvia0425/fortune` visual system and
+connects directly to this repository's FastAPI service. It covers collections, notes, tags,
+identity switching, privacy settings, export, and deletion.
+
+Local development:
+
+```bash
+cd frontend
+cp .env.example .env.local
+npm install
+npm run dev
+```
+
+Open <http://localhost:3000>. The default API origin is `http://127.0.0.1:8000`.
+
+For browser access from another machine, set
+`NEXT_PUBLIC_MODULE4_API_BASE_URL` to an address reachable by that browser, bind the frontend to
+`0.0.0.0`, and add the frontend origin to `CORS_ORIGINS`. For non-local networks, use HTTPS and
+set `REQUIRE_USER_HEADER=true` on the API.
+
+Production build:
+
+```bash
+cd frontend
+NEXT_PUBLIC_MODULE4_API_BASE_URL=https://api.example.com npm run build
+npm start -- --hostname 0.0.0.0 --port 3000
+```
+
 ## PostgreSQL + pgvector
 
 Copy `.env.example` to `.env`, start PostgreSQL through Docker Compose, and run the migration:
@@ -222,6 +252,7 @@ alembic/               database migrations
 docs/                  integration and model-selection notes
 scripts/               local bootstrap, demo, and OpenAPI helpers
 tests/                 SQLite end-to-end API tests
+frontend/              Next.js personal knowledge base and privacy UI
 ```
 
 ## Security Notes

@@ -1,6 +1,17 @@
 # Deployment Modes
 
-Module 4 supports three deployment modes without changing its API contracts.
+Module 4 supports local and remote-access deployment on Windows, Linux, and macOS without changing
+its API contracts.
+
+| Host | Local API and frontend | Remote client access |
+| --- | --- | --- |
+| Windows | `setup_windows.bat`, `start_windows.bat`, then `cd frontend && npm run dev` | `start_windows.bat` binds `0.0.0.0`; configure `CORS_ORIGINS` and `REQUIRE_USER_HEADER=true` |
+| Linux | `bash setup_linux.sh`, `bash start_linux.sh`, then `cd frontend && npm run dev` | `start_linux.sh` binds `0.0.0.0`; put the API behind TLS and configure `CORS_ORIGINS` |
+| macOS | `bash scripts/bootstrap.sh`, `./start.command`, then `cd frontend && npm run dev` | `start.command` binds `0.0.0.0`; use a TLS reverse proxy before exposing it outside the LAN |
+
+For every remote deployment, set `NEXT_PUBLIC_MODULE4_API_BASE_URL` to an address reachable by the
+browser and add the frontend origin to `CORS_ORIGINS`. Do not use `DEV_USER_ID` as remote
+authentication; provide the authenticated pseudonymous identity through `X-User-Id`.
 
 ## 1. Windows Local
 
@@ -54,7 +65,7 @@ For PostgreSQL, use `docker compose up -d db`, update `.env`, and run:
 bash migrate_linux.sh
 ```
 
-## 3. Remote Mac Qwen
+## 3. Remote Mac Qwen (Optional Inference Host)
 
 This mode keeps Module 4 and PostgreSQL on Windows or Linux while the MacBook runs Ollama.
 
